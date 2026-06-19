@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Builder — Module 1: Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="m1-wrapper">
+
+  <!-- NAV -->
+  <nav class="m1-nav">
+    <div class="m1-logo">
+      <div class="m1-logo-icon">✉</div>
+      <span>Email Builder</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <span class="badge badge-blue">Module 1</span>
+      <a href="builder.html" class="btn btn-primary btn-sm">Open Email Builder →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="m1-hero">
+    <div class="m1-hero-badge">
+      <span>⚡</span>
+      Step 1 of 2 — Registration &amp; Script Generation
+    </div>
+    <h1>Register &amp; Generate<br>Your Apps Script</h1>
+    <p>
+      Generate a personalized Google Apps Script tied to your Gmail account.
+      Deploy it once — then use it forever to send emails through your own Gmail.
+      <strong>No backend servers. No SMTP costs. You own everything.</strong>
+    </p>
+
+    <!-- Deployment Wizard Progress -->
+    <div class="m1-wizard-wrap" style="margin-top:1.75rem">
+      <div class="m1-wizard-progress" id="wizard-progress">
+        <div class="m1-wz-step active" data-wz="1">
+          <div class="m1-wz-num">1</div>
+          <div class="m1-wz-label">Enter Email</div>
+        </div>
+        <div class="m1-wz-step" data-wz="2">
+          <div class="m1-wz-num">2</div>
+          <div class="m1-wz-label">Generate Script</div>
+        </div>
+        <div class="m1-wz-step" data-wz="3">
+          <div class="m1-wz-num">3</div>
+          <div class="m1-wz-label">Copy &amp; Deploy</div>
+        </div>
+        <div class="m1-wz-step" data-wz="4">
+          <div class="m1-wz-num">4</div>
+          <div class="m1-wz-label">Get URL &amp; ID</div>
+        </div>
+        <div class="m1-wz-step" data-wz="5">
+          <div class="m1-wz-num">5</div>
+          <div class="m1-wz-label">Verify &amp; Build</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m1-steps">
+      <div class="m1-step">
+        <div class="m1-step-num">1</div>
+        <h4>Enter Email</h4>
+        <p>Your Gmail address used for sending</p>
+      </div>
+      <div class="m1-step">
+        <div class="m1-step-num">2</div>
+        <h4>Generate Script</h4>
+        <p>SHA256 hash embedded automatically</p>
+      </div>
+      <div class="m1-step">
+        <div class="m1-step-num">3</div>
+        <h4>Deploy Script</h4>
+        <p>Paste into Google Apps Script &amp; deploy</p>
+      </div>
+      <div class="m1-step">
+        <div class="m1-step-num">4</div>
+        <h4>Get URL + ID</h4>
+        <p>Copy your deployment credentials</p>
+      </div>
+      <div class="m1-step">
+        <div class="m1-step-num">5</div>
+        <h4>Verify &amp; Send</h4>
+        <p>Test connection, then build emails</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <div class="m1-form-wrap">
+    <div class="m1-form-card">
+      <div class="m1-form-card-header">
+        <span style="font-size:1.3rem">🔑</span>
+        <div>
+          <h2>Registration — Step 1</h2>
+          <p class="text-sm text-2">Enter your Gmail address to generate your personalized Apps Script</p>
+        </div>
+      </div>
+      <div class="m1-form-body">
+        <div class="field">
+          <label for="reg-email">Your Gmail Address <span style="color:var(--danger)">*</span></label>
+          <input
+            type="email"
+            id="reg-email"
+            placeholder="you@gmail.com"
+            autocomplete="email"
+            spellcheck="false"
+            autofocus
+          >
+          <p class="text-xs text-3 mt-1">
+            Must be the Gmail account you will use to send emails. The SHA256 of this address is
+            embedded in your Apps Script as proof of ownership — it cannot be changed without
+            regenerating the script.
+          </p>
+        </div>
+        <button class="m1-generate-btn" id="generate-btn">
+          <span>⚡</span> Generate Apps Script
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT (hidden until generated) -->
+  <div class="m1-output hidden" id="m1-output">
+    <div class="m1-output-card">
+
+      <div class="m1-output-tabs">
+        <button class="m1-tab" data-tab="compliance">✅ Compliance</button>
+        <button class="m1-tab" data-tab="script">📄 Apps Script</button>
+        <button class="m1-tab" data-tab="hash">🔐 SHA256 Hash</button>
+        <button class="m1-tab" data-tab="instructions">📋 Deploy Guide</button>
+      </div>
+
+      <!-- ╔══════════════════════════════════════════════╗
+           ║  COMPLIANCE TAB (shown first after generate) ║
+           ╚══════════════════════════════════════════════╝ -->
+      <div class="m1-tab-content" data-tab="compliance">
+
+        <!-- Compliance Banner -->
+        <div id="compliance-panel" class="hidden">
+          <div id="compliance-banner" class="compliance-banner"></div>
+
+          <div style="margin-top:1rem;margin-bottom:.5rem">
+            <p class="text-xs text-2" style="font-weight:600;text-transform:uppercase;letter-spacing:.06em">
+              Script Component Checklist
+            </p>
+            <p class="text-xs text-3 mt-1">Every component must be present before the script can be exported and deployed.</p>
+          </div>
+
+          <div id="compliance-list" class="compliance-list"></div>
+
+          <!-- Export gate message (shown when compliance fails) -->
+          <div id="export-gate-msg" class="hidden" style="margin-top:1rem;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:.85rem">
+            <p class="text-xs" style="color:var(--danger);font-weight:600">✕ Export Blocked — Compliance Failed</p>
+            <p class="text-xs text-3 mt-1">The generated script did not pass all compliance checks. Copy and Download are disabled. Please regenerate the script.</p>
+          </div>
+
+          <!-- Execution Order Diagram -->
+          <div class="exec-order-diagram" style="margin-top:1.25rem">
+            <div class="exec-order-title">Guaranteed Execution Order</div>
+            <div class="exec-order-steps">
+              <div class="exec-step verify">Request Received</div>
+              <div class="exec-step-arrow">↓</div>
+              <div class="exec-step verify">Verify SHA256 <span class="exec-step-badge first">FIRST</span></div>
+              <div class="exec-step-arrow">↓ Pass?</div>
+              <div class="exec-order-split">
+                <div class="exec-split-branch pass-branch">
+                  <div class="exec-branch-label">YES ✓</div>
+                  <div class="exec-step">Working Process</div>
+                  <div class="exec-step-arrow">↓</div>
+                  <div class="exec-step">Build Email</div>
+                  <div class="exec-step-arrow">↓</div>
+                  <div class="exec-step">Embed Images</div>
+                  <div class="exec-step-arrow">↓</div>
+                  <div class="exec-step">Attach Files</div>
+                  <div class="exec-step-arrow">↓</div>
+                  <div class="exec-step">Send via Gmail</div>
+                  <div class="exec-step-arrow">↓</div>
+                  <div class="exec-step success-step">Store History</div>
+                </div>
+                <div class="exec-split-branch fail-branch">
+                  <div class="exec-branch-label">NO ✕</div>
+                  <div class="exec-step danger-step">Ignore Request</div>
+                  <div class="exec-step-arrow">↓</div>
+                  <div class="exec-step danger-step">Terminate</div>
+                  <div class="exec-step-arrow">&nbsp;</div>
+                  <div class="exec-step-note">No history<br>No processing<br>No sending</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Script Tab -->
+      <div class="m1-tab-content" data-tab="script">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.85rem;margin-bottom:1rem">
+          <p style="font-size:.82rem;color:var(--text2);font-weight:600;margin-bottom:.3rem">✓ Script Generated — Next Steps:</p>
+          <ol style="font-size:.8rem;color:var(--text2);padding-left:1.25rem;line-height:1.8">
+            <li>Check the <strong>Compliance</strong> tab — all checks must pass before copying</li>
+            <li>Copy the script below</li>
+            <li>Open <a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a></li>
+            <li>Create a new project → paste → save → Deploy as Web App</li>
+            <li>Copy the Web App URL and Script ID</li>
+            <li>Go to the <strong>Deploy Guide</strong> tab for full step-by-step instructions</li>
+          </ol>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="copy-script-btn">📋 Copy Script</button>
+          <button class="btn btn-ghost btn-sm" id="download-script-btn">⬇ Download .gs File</button>
+          <a href="builder.html" class="btn btn-ghost btn-sm">→ Skip to Email Builder</a>
+        </div>
+        <pre class="code-block" id="script-code"></pre>
+      </div>
+
+      <!-- Hash Tab -->
+      <div class="m1-tab-content" data-tab="hash">
+        <p class="text-sm text-2 mb-4">
+          This SHA256 hash of your email address is embedded inside the generated Apps Script.
+          Every send request is verified against this hash. If it doesn't match, the request is silently ignored.
+        </p>
+        <div class="field">
+          <label>SHA256 Hash (of your registered email)</label>
+          <div class="m1-hash-box" id="hash-value"></div>
+        </div>
+        <button class="btn btn-primary btn-sm m1-copy-btn" id="copy-hash-btn">📋 Copy Hash</button>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.85rem;margin-top:1rem">
+          <p class="text-xs text-2">
+            <strong>Security Model:</strong> The hash is stored in your Apps Script, not in this platform.
+            When you click Send in Module 2, your From Email is hashed and compared with the stored hash.
+            No email is ever sent if the hashes don't match. The platform never sends emails directly.
+          </p>
+        </div>
+
+        <!-- Ownership Chain Display -->
+        <div id="ownership-chain" class="hidden" style="margin-top:1.25rem"></div>
+      </div>
+
+      <!-- Instructions Tab (Full Deployment Guide) -->
+      <div class="m1-tab-content" data-tab="instructions">
+        <p class="text-sm text-2 mb-4">
+          Follow these steps exactly. Each step takes about 30 seconds. Total setup time: ~5 minutes.
+        </p>
+
+        <div style="background:var(--surface2);border:1px solid var(--accent);border-radius:8px;padding:.85rem;margin-bottom:1rem">
+          <p class="text-xs" style="color:var(--accent);font-weight:700;margin-bottom:.25rem">⚡ You are on Step 3 of the 5-step wizard</p>
+          <p class="text-xs text-2">Complete these instructions to finish setup and unlock the Email Builder.</p>
+        </div>
+
+        <div class="m1-instructions">
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">1</div>
+            <div>
+              <h4>Check Compliance</h4>
+              <p>Switch to the <strong>Compliance</strong> tab and verify all checks pass before proceeding. Export is blocked if any check fails.</p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">2</div>
+            <div>
+              <h4>Copy the Generated Script</h4>
+              <p>Switch to the "Apps Script" tab and click <strong>Copy Script</strong> to copy the entire code to your clipboard.</p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">3</div>
+            <div>
+              <h4>Open Google Apps Script</h4>
+              <p>Go to <a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a> and sign in with the <strong>exact same Gmail address</strong> you registered above.</p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">4</div>
+            <div>
+              <h4>Create a New Project</h4>
+              <p>Click <strong>New Project</strong> (top left). Delete the placeholder code in the editor. Paste your copied script. Press <strong>Ctrl+S</strong> to save. Name it "Email Builder".</p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">5</div>
+            <div>
+              <h4>Deploy as Web App</h4>
+              <p>Click <strong>Deploy → New Deployment</strong>. Set Type = <strong>Web App</strong>.</p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">6</div>
+            <div>
+              <h4>Configure Deployment Settings</h4>
+              <p>
+                Set <strong>"Execute as"</strong> → <em>Me (your Google account)</em><br>
+                Set <strong>"Who has access"</strong> → <em>Anyone</em>
+              </p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">7</div>
+            <div>
+              <h4>Authorize Gmail Permissions</h4>
+              <p>Click <strong>Deploy</strong>. Google will ask to authorize Gmail permissions. Click <strong>Allow</strong>. This lets your script send emails through your Gmail.</p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">8</div>
+            <div>
+              <h4>Copy Your Web App URL</h4>
+              <p>
+                After deployment, you'll see a <strong>Web App URL</strong>:<br>
+                <code style="font-family:monospace;font-size:.78rem;background:var(--surface2);padding:.15rem .4rem;border-radius:3px">https://script.google.com/macros/s/AKfycb.../exec</code><br>
+                Copy this URL — you'll need it in Module 2.
+              </p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">9</div>
+            <div>
+              <h4>Copy Your Script ID</h4>
+              <p>In your Apps Script project URL bar, find the Script ID (the long string after <code style="font-family:monospace;font-size:.78rem;background:var(--surface2);padding:.15rem .4rem;border-radius:3px">/projects/</code>). Copy it too.</p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">10</div>
+            <div>
+              <h4>Configure Module 2 &amp; Test Connection</h4>
+              <p>
+                Open the Email Builder, click <strong>⚙ Account</strong>, and enter your:<br>
+                • From Email (the Gmail you registered)<br>
+                • Apps Script URL (from Step 8)<br>
+                • Script ID (from Step 9)<br>
+                Then click <strong>"Test Connection &amp; Verify Ownership"</strong> to run all 5 verification phases.
+              </p>
+            </div>
+          </div>
+          <div class="m1-instruction-step">
+            <div class="m1-step-circle">11</div>
+            <div>
+              <h4>🚀 You're Ready!</h4>
+              <p>Once all verification phases pass and the Deployment Validation panel shows "Builder Ready", you can build email campaigns using the Bucket → Stack → Preview → Submit → Send workflow.</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="builder.html" class="m1-go-btn" style="margin-top:1.5rem">
+          🚀 Open Email Builder (Module 2) →
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="text-align:center;padding:2rem;color:var(--text3);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
+    <p style="margin-bottom:.35rem">Self-hosted Email Builder · Runs on GitHub Pages · Sends through your own Gmail</p>
+    <p>Platform never sends emails · All sending occurs through your deployed Apps Script · You own your data</p>
+  </footer>
+
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<script src="js/sha256.js"></script>
+<script src="js/module1.js"></script>
+</body>
+</html>
